@@ -1,0 +1,18 @@
+{
+  "name": "blindagem",
+  "version": "0.1.0",
+  "description": "Scanner de vazamento para blindar seu próprio software antes de lançar — acha segredo, chave, PII, source map, símbolo de debug e endpoint interno no artefato publicável. / Pre-release leak scanner: find secrets, keys, PII, source maps, debug symbols and internal endpoints in your own build before you ship.",
+  "type": "module",
+  "bin": {
+    "blindagem": "bin/blindagem.mjs"
+  },
+  "scripts": {
+    "test": "node test/run.mjs",
+    "scan": "node bin/blindagem.mjs"
+  },
+  "keywords": ["security", "reverse-engineering", "secrets", "leak", "sast", "appsec", "defensive", "ci"],
+  "license": "MIT",
+  "author": "Thiago Porto Oliveira",
+  "engines": { "node": ">=18" },
+  "files": ["bin/", "src/", "README.md", "LICENSE"]
+}

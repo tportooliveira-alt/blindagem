@@ -1,0 +1,22 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "24"
+      - name: Testes do ruleset e do motor
+        run: node test/run.mjs
+
+  # Exemplo de portao de release no SEU proprio repo: aponte para o build publicavel.
+  # gate-anti-copia:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
+  #     - uses: actions/setup-node@v4
+  #       with: { node-version: "24" }
+  #     - run: npm ci && npm run build   # build do SEU app
+  #     - run: node bin/blindagem.mjs ./dist --fail-on=alto
