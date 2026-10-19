@@ -33,6 +33,12 @@ try {
     'const cpf = "123.456.789-00";',
     'const card = "4111 1111 1111 1111";',               // Luhn valido
     'const api_key = "s3cr3t_v4lue_longo_aqui_123";',
+    `const py = "${mk("pypi-", "AgEIcHlwaS5vcmc" + "A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6Q7r8S9t0U1v2W3x4")}";`,
+    `CLOUDFLARE_API_TOKEN="${mk("v1A2b3C4d5E6f7G8h9I0", "j1K2l3M4n5O6p7Q8r9S0")}"`,
+    `DD_API_KEY=${mk("0123456789", "abcdef0123456789abcdef")}`,
+    `const nr = "${mk("NRAK-", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0")}";`,
+    `const gf = "${mk("glsa_", "A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6")}_${mk("0123", "abcd")}";`,
+    `const dp = "${mk("dp.pt.", "A1b2C3d4E5f6G7h8I9j0K1l2M3n4O5p6Q7r8S9t0")}";`,
   ].join("\n");
   writeFileSync(join(dir, "positivo.js"), positivo);
 
@@ -44,6 +50,8 @@ try {
     'const nums = "100.200.300.40";',                     // nao e CPF
     'const apiKey = process.env.API_KEY;',                // placeholder -> ignorado
     'console.log("ola mundo");',
+    'const t = process.env.CLOUDFLARE_API_TOKEN; // DD_API_KEY=your_key_here',
+    'const pkg = "pypi-simple-index"; const nr = "NRAK-curto";',
   ].join("\n");
   writeFileSync(join(dir, "negativo.js"), negativo);
 
@@ -57,6 +65,9 @@ try {
   for (const cls of ["segredo", "sourcemap", "endpoint-interno", "pii"])
     ok(pos.some((f) => f.classe === cls), `positivo sem classe ${cls}`);
   ok(pos.some((f) => f.rule === "cartao-credito"), "Luhn: cartao valido nao detectado");
+
+  for (const rid of ["pypi-api-token", "cloudflare-api-token-atribuicao", "datadog-api-key-atribuicao", "newrelic-user-api-key", "grafana-service-account-token", "doppler-token"])
+    ok(pos.some((f) => f.rule === rid), `regra nova ${rid} nao disparou`);
 
   const neg = scanPath(join(dir, "negativo.js")).findings;
   ok(neg.length === 0, `negativo deveria ter 0 achados, teve ${neg.length}: ${neg.map((f) => f.rule).join(",")}`);
