@@ -4,6 +4,17 @@
 > que não dispara, FP real), anota-se **onde foi** e **como fechou**. É o registro
 > que faz o scanner melhorar a cada loop. Formato: data · o que · onde · correção.
 
+## 2026-10-19
+
+### [cobertura] 6 regras novas de alta confiança (rodada semanal)
+- **Onde:** `src/rules-extra.mjs:37-48` — `pypi-api-token`, `cloudflare-api-token-atribuicao`,
+  `datadog-api-key-atribuicao`, `newrelic-user-api-key`, `grafana-service-account-token`, `doppler-token`.
+  Nenhuma dessas existia em `rules.mjs`/`rules-extra.mjs`. As de formato ambíguo (Cloudflare, Datadog)
+  exigem o nome da variável + `validar` anti-placeholder para evitar FP.
+- **Teste:** `test/run.mjs` — 6 positivos (tokens por concatenação) com asserção por `rule` id;
+  2 linhas negativas novas (`process.env`/`your_key`, `pypi-simple-index`, `NRAK-curto`) com 0 achados.
+- **Resultado:** 219 ok, 0 falhou. Nenhuma brecha/FP novo encontrado nas regras antigas.
+
 ## 2026-10-15
 
 ### [FP] regra genérica de credencial disparava em `process.env`
