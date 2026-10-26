@@ -35,6 +35,16 @@
 - **Honestidade:** isto impede a RE **automática/casual** e encarece a manual; não torna impossível
   contra humano determinado — essa parte é server-side (ver método de blindagem).
 
+## 2026-10-26 — ronda semanal: +7 regras de provedores
+- **O quê:** 7 regras novas de alta confiança (classe `segredo`): `pypi-token`, `databricks-token`,
+  `grafana-token`, `dockerhub-pat`, `vault-token` (critico); `cloudflare-token-atribuicao` (critico, com
+  contexto `CLOUDFLARE_API_TOKEN` ou Origin CA key `v1.0-…`); `datadog-key-atribuicao` (alto, só com contexto
+  `DD_API_KEY` etc., pois a chave é hex puro e sem contexto geraria falso-positivo).
+- **Onde:** `src/rules-extra.mjs:42-59` (testes em `test/run.mjs`: 7 positivos montados por `mk()`, 3 negativos
+  incl. `process.env.DD_API_KEY`, placeholder Cloudflare e `dapi_`/`hvs.` curtos, + loop checando cada `rule`).
+- **Brechas nas regras atuais:** nenhuma nova encontrada nesta rodada.
+- **Resultado:** `node test/run.mjs` → 221 ok, 0 falhou (baseline era 207).
+
 ## Como registrar um aprendizado novo
 1. Escreva um teste em `test/run.mjs` que **reproduz** a brecha (fixture que deveria/não deveria disparar).
 2. Rode `npm test` e confirme que ele **falha** (prova a brecha).

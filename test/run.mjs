@@ -33,6 +33,13 @@ try {
     'const cpf = "123.456.789-00";',
     'const card = "4111 1111 1111 1111";',               // Luhn valido
     'const api_key = "s3cr3t_v4lue_longo_aqui_123";',
+    `const py = "${mk("pypi-AgEIcHlwaS5vcmc", "A".repeat(60))}";`,
+    `const db = "${mk("dapi", "0123456789abcdef0123456789abcdef")}";`,
+    `const gf = "${mk("glsa", "_" + "A1b2C3d4".repeat(4) + "_deadbeef")}";`,
+    `const dk = "${mk("dckr_pat", "_" + "Ab1Cd2Ef3".repeat(3) + "xyz")}";`,
+    `const vt = "${mk("hvs", "." + "AbCdEf0123".repeat(3))}";`,
+    `CLOUDFLARE_API_TOKEN=${mk("Zx9Qw8Er7", "Ty6Ui5Op4As3Df2Gh1Jk0LzXcVbNmQwEr")}`,
+    `const dd = { "DD_API_KEY": "${mk("0123456789", "abcdef0123456789abcdef01")}" };`,
   ].join("\n");
   writeFileSync(join(dir, "positivo.js"), positivo);
 
@@ -44,6 +51,9 @@ try {
     'const nums = "100.200.300.40";',                     // nao e CPF
     'const apiKey = process.env.API_KEY;',                // placeholder -> ignorado
     'console.log("ola mundo");',
+    'const dd = process.env.DD_API_KEY;',
+    'CLOUDFLARE_API_TOKEN=your-token-here-0123456789abcdefghijklmn',
+    'const t = "dapi_nao_e_token"; const v = "hvs.curto";',
   ].join("\n");
   writeFileSync(join(dir, "negativo.js"), negativo);
 
@@ -57,6 +67,9 @@ try {
   for (const cls of ["segredo", "sourcemap", "endpoint-interno", "pii"])
     ok(pos.some((f) => f.classe === cls), `positivo sem classe ${cls}`);
   ok(pos.some((f) => f.rule === "cartao-credito"), "Luhn: cartao valido nao detectado");
+
+  for (const rid of ["pypi-token", "databricks-token", "grafana-token", "dockerhub-pat", "vault-token", "cloudflare-token-atribuicao", "datadog-key-atribuicao"])
+    ok(pos.some((f) => f.rule === rid), `regra ${rid} nao disparou no positivo`);
 
   const neg = scanPath(join(dir, "negativo.js")).findings;
   ok(neg.length === 0, `negativo deveria ter 0 achados, teve ${neg.length}: ${neg.map((f) => f.rule).join(",")}`);
